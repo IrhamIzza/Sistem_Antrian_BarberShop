@@ -14,7 +14,7 @@ export default function Navbar() {
     <nav className="p-4">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
-        <div className="text-black text-3xl font-bold">Desain Interior</div>
+        <div className="text-black text-3xl font-bold">Barber Shop</div>
 
         {/* Menu */}
         <ul className="hidden sm:flex gap-6 font-medium text-[25px] tracking-wide">
@@ -24,8 +24,8 @@ export default function Navbar() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/tentang" className={navClass}>
-              Tentang
+            <NavLink to="/admin" className={navClass}>
+              Admin
             </NavLink>
           </li>
           <li>
