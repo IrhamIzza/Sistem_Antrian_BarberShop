@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('customer_name');
+            $table->string('phone');
             $table->foreignId('barber_id')->constrained()->cascadeOnDelete();
             $table->date('date');
             $table->time('start_time');
@@ -22,6 +24,7 @@ return new class extends Migration
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
