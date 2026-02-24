@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export default function Dashboard() {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
-  
+
   async function logout() {
     await api.post("/admin/logout");
     localStorage.removeItem("token");
@@ -29,6 +29,7 @@ export default function Dashboard() {
             <th className="border p-2">Tanggal</th>
             <th className="border p-2">Waktu</th>
             <th className="border p-2">Barber</th>
+            <th className="border p-2">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -41,6 +42,7 @@ export default function Dashboard() {
                 {r.start_time} - {r.end_time}
               </td>
               <td className="border p-2">{r.barber.name}</td>
+              <td className="border p-2">{r.status}</td>
             </tr>
           ))}
         </tbody>

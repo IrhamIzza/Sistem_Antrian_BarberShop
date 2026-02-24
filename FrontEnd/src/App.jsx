@@ -4,6 +4,7 @@ import Login from "@/pages/admin/Login";
 import Dashboard from "@/pages/admin/Dashboard";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Navbar from "./components/Navbar";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
           }
         />
       </Routes>
+      <Toaster />
     </>
   );
 }
