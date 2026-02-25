@@ -14,7 +14,7 @@ export default function Navbar() {
     <nav className="p-4">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
-        <div className="text-black text-3xl font-bold">Desain Interior</div>
+        <div className="text-black text-3xl font-bold">Barber Shop</div>
 
         {/* Menu */}
         <ul className="hidden sm:flex gap-6 font-medium text-[25px] tracking-wide">
@@ -24,28 +24,8 @@ export default function Navbar() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/tentang" className={navClass}>
-              Tentang
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/kategori" className={navClass}>
-              Kategori
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/testimoni" className={navClass}>
-              Testimoni
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/kontak" className={navClass}>
-              Kontak
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/kontak" className={navClass}>
-              Konsultasi
+            <NavLink to="/admin/dashboard" className={navClass}>
+              Admin
             </NavLink>
           </li>
         </ul>
@@ -81,47 +61,11 @@ export default function Navbar() {
           </li>
           <li>
             <a
-              href="#tentang"
+              href="admin"
               className="block px-2 py-1 hover:bg-blue-500 rounded"
               onClick={() => setIsOpen(false)}
             >
               Tentang
-            </a>
-          </li>
-          <li>
-            <a
-              href="#kategori"
-              className="block px-2 py-1 hover:bg-blue-500 rounded"
-              onClick={() => setIsOpen(false)}
-            >
-              Kategori
-            </a>
-          </li>
-          <li>
-            <a
-              href="#testimoni"
-              className="block px-2 py-1 hover:bg-blue-500 rounded"
-              onClick={() => setIsOpen(false)}
-            >
-              Testimoni
-            </a>
-          </li>
-          <li>
-            <a
-              href="#kontak"
-              className="block px-2 py-1 hover:bg-blue-500 rounded"
-              onClick={() => setIsOpen(false)}
-            >
-              Kontak
-            </a>
-          </li>
-          <li>
-            <a
-              href="#konsultasi"
-              className="block px-2 py-1 hover:bg-blue-500 rounded"
-              onClick={() => setIsOpen(false)}
-            >
-              Konsultasi
             </a>
           </li>
         </ul>
