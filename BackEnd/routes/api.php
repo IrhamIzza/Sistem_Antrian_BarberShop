@@ -18,6 +18,9 @@ Route::post('/reservations', [ReservationController::class, 'store']);
 // ADMIN (Protected)
 Route::post('/admin/login', [AuthController::class, 'login']);
 
+Route::post('/reservations/{id}/status', [ReservationController::class, 'updateStatus']);
+Route::delete('/reservations/{id}', [ReservationController::class, 'destroy']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin/reservations', [ReservationController::class, 'index']);
     Route::post('/admin/logout', [AuthController::class, 'logout']);

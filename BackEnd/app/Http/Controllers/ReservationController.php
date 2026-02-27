@@ -35,6 +35,7 @@ class ReservationController extends Controller
         $exists = Reservation::where('barber_id', $request->barber_id)
             ->where('date', $request->date)
             ->where('start_time', $start->format('H:i:s'))
+            ->where('status','booked')
             ->exists();
 
         if ($exists) {
@@ -51,5 +52,30 @@ class ReservationController extends Controller
             'start_time' => $start,
             'end_time' => $end,
         ]);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:booked,cancelled,done'
+        ]);
+
+        $reservation = Reservation::findOrFail($id);
+
+        $reservation->status = $request->status;
+        $reservation->save();
+
+        return response()->json([
+            'message' => 'Status berhasil diperbarui',
+            'data' => $reservation
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        $reservation = Reservation::findOrFail($id);
+        $reservation->delete();
+
+        return response()->json(['message' => 'Reservasi berhasil dihapus']);
     }
 }
