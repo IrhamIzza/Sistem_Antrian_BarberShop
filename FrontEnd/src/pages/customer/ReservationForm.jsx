@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import Loading from "@/components/Loading";
+import CurrentTime from "@/components/CurrentTime";
 
 export default function ReservationForm() {
   const initialForm = {
@@ -37,62 +38,72 @@ export default function ReservationForm() {
       toast.error(err.response?.data?.message || "Terjadi kesalahan", {
         position: "top-right",
       });
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 space-y-4">
+    <div className="mt-5  px-20">
       <Loading loading={loading} />
-      <h1 className="text-xl font-bold">Reservasi Barbershop</h1>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <Input
-          placeholder="Nama"
-          value = {form.customer_name}
-          onChange={(e) => setForm({ ...form, customer_name: e.target.value })}
-        />
-        <Input
-          placeholder="Nomor Telepon"
-          value = {form.phone}
-          onChange={(e) => setForm({ ...form, phone: e.target.value })}
-        />
-        <Input
-          type="date"
-          value = {form.date}
-          onChange={(e) => setForm({ ...form, date: e.target.value })}
-        />
+      <div className="text-right">
+        <CurrentTime />
+      </div>
+      <div className="mx-auto max-w-md space-y-4">
+        <h1 className="text-xl font-bold text-center">Reservasi Barbershop</h1>
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <Input
+            placeholder="Nama"
+            value={form.customer_name}
+            onChange={(e) =>
+              setForm({ ...form, customer_name: e.target.value })
+            }
+          />
+          <Input
+            type="number"
+            placeholder="Nomor Telepon"
+            value={form.phone}
+            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            maxLength={15} 
+          />
+          <Input
+            type="date"
+            value={form.date}
+            min={new Date().toISOString().split("T")[0]}
+            onChange={(e) => setForm({ ...form, date: e.target.value })}
+          />
 
-        <select
-          className="w-full border rounded p-2"
-          value = {form.barber_id}
-          onChange={(e) => setForm({ ...form, barber_id: e.target.value })}
-        >
-          <option value="">Pilih Barber</option>
-          {barbers.map((b) => (
-            <option key={b.id} value={b.id}>
-              {b.name}
-            </option>
-          ))}
-        </select>
+          <select
+            className="w-full border rounded p-2"
+            value={form.barber_id}
+            onChange={(e) => setForm({ ...form, barber_id: e.target.value })}
+          >
+            <option value="">Pilih Barber</option>
+            {barbers.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.name}
+              </option>
+            ))}
+          </select>
 
-        <select
-          className="w-full border rounded p-2"
-          value={form.start_time}
-          onChange={(e) => setForm({ ...form, start_time: e.target.value })}
-        >
-          <option value="">Pilih Waktu</option>
-          {hours.map((h) => (
-            <option key={h} value={h}>
-              {h}
-            </option>
-          ))}
-        </select>
+          <select
+            className="w-full border rounded p-2"
+            value={form.start_time}
+            onChange={(e) => setForm({ ...form, start_time: e.target.value })}
+          >
+            <option value="">Pilih Waktu</option>
+            {hours.map((h) => (
+              <option key={h} value={h}>
+                {h}
+              </option>
+            ))}
+          </select>
 
-        <Button type="submit" className="w-full">
-          Booking
-        </Button>
-      </form>
+          <Button type="submit" className="w-full">
+            Booking
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }
