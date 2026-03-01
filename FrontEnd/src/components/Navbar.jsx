@@ -3,18 +3,18 @@ import { Link, NavLink } from "react-router-dom";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const navClass = ({ isActive }) =>
-    `relative pb-2 transition-colors duration-300
-     ${isActive ? "text-black" : "text-black hover:text-black"}
+    `relative transition-colors duration-300
+     ${isActive ? "text-white" : "text-white hover:text-white"}
      after:absolute after:left-0 after:-bottom-1
-     after:h-[2px] after:bg-black after:rounded-full
+     after:h-[2px] after:bg-white after:rounded-full
      after:transition-all after:duration-300
      ${isActive ? "after:w-full" : "after:w-0 hover:after:w-full"}`;
 
   return (
-    <nav className="p-4">
+    <nav className="p-4 bg-gray-700 shadow-xl">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
-        <div className="text-black text-3xl font-bold">Barber Shop</div>
+        <div className="text-white text-3xl font-bold">Barber Shop</div>
 
         {/* Menu */}
         <ul className="hidden sm:flex gap-6 font-medium text-[25px] tracking-wide">
