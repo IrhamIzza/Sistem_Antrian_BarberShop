@@ -13,7 +13,8 @@ class ReservationController extends Controller
     public function index()
     {
         return Reservation::with('barber')
-            ->orderBy('date', 'desc')
+            ->orderBy('date', 'asc')
+            ->orderBy('start_time', 'asc')
             ->get();
     }
 
@@ -35,7 +36,7 @@ class ReservationController extends Controller
         $exists = Reservation::where('barber_id', $request->barber_id)
             ->where('date', $request->date)
             ->where('start_time', $start->format('H:i:s'))
-            ->where('status','booked')
+            ->where('status', 'booked')
             ->exists();
 
         if ($exists) {
@@ -77,5 +78,51 @@ class ReservationController extends Controller
         $reservation->delete();
 
         return response()->json(['message' => 'Reservasi berhasil dihapus']);
+    }
+
+    public function checkAvailability(Request $request)
+    {
+        $request->validate([
+            'barber_id' => 'required|exists:barbers,id',
+            'date' => 'required|date',
+        ]);
+
+        $startWork = Carbon::parse('12:00');
+        $endWork   = Carbon::parse('23:00');
+
+        // Ambil jam yang sudah dibooking
+        $bookedSlots = Reservation::where('barber_id', $request->barber_id)
+            ->where('date', $request->date)
+            ->where('status', 'booked')
+            ->pluck('start_time')
+            ->map(function ($time) {
+                return Carbon::parse($time)->format('H:i');
+            })
+            ->toArray();
+
+        $slots = [];
+
+        while ($startWork < $endWork) {
+
+            $timeFormatted = $startWork->format('H:i');
+
+            $slots[] = [
+                'time' => $timeFormatted,
+                'status' => in_array($timeFormatted, $bookedSlots)
+                    ? 'booked'
+                    : 'available'
+            ];
+
+            $startWork->addHour();
+        }
+
+        $bookedCount = count($bookedSlots);
+        $maxSlotPerDay = count($slots);
+
+        return response()->json([
+            'is_full' => $bookedCount >= $maxSlotPerDay,
+            'booked_count' => $bookedCount,
+            'slots' => $slots
+        ]);
     }
 }

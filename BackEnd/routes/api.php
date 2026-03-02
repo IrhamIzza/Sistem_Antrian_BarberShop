@@ -18,6 +18,7 @@ Route::post('/reservations', [ReservationController::class, 'store']);
 // ADMIN (Protected)
 Route::post('/admin/login', [AuthController::class, 'login']);
 
+Route::get('/reservations/check', [ReservationController::class, 'checkAvailability']);
 Route::post('/reservations/{id}/status', [ReservationController::class, 'updateStatus']);
 Route::delete('/reservations/{id}', [ReservationController::class, 'destroy']);
 
