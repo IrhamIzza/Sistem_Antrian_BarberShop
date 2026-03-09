@@ -17,23 +17,47 @@ export default function ReservationForm() {
   const [barbers, setBarbers] = useState([]);
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(false);
+  const [slots, setSlots] = useState([]);
+  const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     api.get("/barbers").then((res) => setBarbers(res.data));
   }, []);
 
-  const hours = Array.from({ length: 12 }, (_, i) => {
-    const h = i + 11;
-    return `${h.toString().padStart(2, "0")}:00`;
-  });
+  // Fetch slots dari backend setiap barber atau tanggal berubah
+  useEffect(() => {
+    const fetchSlots = async () => {
+      if (!form.barber_id || !form.date) return;
+
+      setChecking(true);
+      try {
+        const res = await api.get(
+          `/reservations/check?barber_id=${form.barber_id}&date=${form.date}`
+        );
+        setSlots(res.data.slots);
+      } catch (err) {
+        toast.error("Gagal load slot");
+        setSlots([]);
+      } finally {
+        setChecking(false);
+      }
+    };
+
+    fetchSlots();
+  }, [form.barber_id, form.date]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!form.start_time) {
+      toast.error("Pilih jam terlebih dahulu");
+      return;
+    }
     try {
       setLoading(true);
       await api.post("/reservations", form);
       toast.success("Reservasi berhasil 🎉", { position: "top-right" });
       setForm(initialForm);
+      setSlots([]);
     } catch (err) {
       toast.error(err.response?.data?.message || "Terjadi kesalahan", {
         position: "top-right",
@@ -44,8 +68,8 @@ export default function ReservationForm() {
   };
 
   return (
-    <div className="mt-5  px-20">
-      <Loading loading={loading} />
+    <div className="mt-5 px-20">
+      <Loading loading={loading || checking} />
       <div className="text-right">
         <CurrentTime />
       </div>
@@ -64,7 +88,7 @@ export default function ReservationForm() {
             placeholder="Nomor Telepon"
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
-            maxLength={15} 
+            maxLength={15}
           />
           <Input
             type="date"
@@ -86,18 +110,32 @@ export default function ReservationForm() {
             ))}
           </select>
 
-          <select
-            className="w-full border rounded p-2"
-            value={form.start_time}
-            onChange={(e) => setForm({ ...form, start_time: e.target.value })}
-          >
-            <option value="">Pilih Waktu</option>
-            {hours.map((h) => (
-              <option key={h} value={h}>
-                {h}
-              </option>
-            ))}
-          </select>
+          {/* Slot Jam Dinamis */}
+          <div className="grid grid-cols-4 gap-2">
+            {slots.length > 0 ? (
+              slots.map((slot) => (
+                <button
+                  key={slot.time}
+                  type="button"
+                  disabled={slot.status === "booked"}
+                  className={`p-2 rounded ${
+                    slot.status === "booked"
+                      ? "bg-red-500 text-white cursor-not-allowed"
+                      : form.start_time === slot.time
+                      ? "bg-black text-white"
+                      : "bg-green-500 text-white"
+                  }`}
+                  onClick={() => setForm({ ...form, start_time: slot.time })}
+                >
+                  {slot.time}
+                </button>
+              ))
+            ) : (
+              <p className="col-span-4 text-center text-gray-500">
+                Pilih barber dan tanggal untuk melihat slot
+              </p>
+            )}
+          </div>
 
           <Button type="submit" className="w-full">
             Booking
